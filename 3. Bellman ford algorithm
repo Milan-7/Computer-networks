@@ -1,0 +1,43 @@
+from sys import maxsize
+
+class Graph:
+	def __init__(self,v):
+		self.V=v
+		self.graph = []
+	
+	def addedge(self,u,v,wt):
+		self.graph.append([u,v,wt])
+	
+	def bellford(self,src):
+		dist=[maxsize] * self.V
+		dist[src-1]=0
+
+		#relax the edges n-1 times
+		for _ in range(self.V-1):
+			for u,v,wt in self.graph:
+				if(dist[u-1]!=maxsize and dist[v-1]>dist[u-1]+wt):
+					dist[v-1]=dist[u-1]+wt
+
+		#relax one more time to detect n-1 time
+		for u,v,wt in self.graph:
+			if(dist[u-1]!=maxsize and dist[v-1]>dist[u-1]+wt):
+				dist[v-1]=dist[u-1]+wt
+
+		#print all distance
+		print("Printing distance array")
+		for i in range(self.V):
+			source=src+1
+			j=i+1
+			print(f"minimum distance from {source} to {j} is {dist[i]}  ");
+
+v=int(input("Enter the number of vertices "))
+e=int(input("enter the number of edges"))
+
+graph=Graph(v)
+print("Enter endges and weight")
+for i in range(e):
+	u,v,wt =map(int,input().split())
+	graph.addedge(u,v,wt)
+
+source=int(input("Enter source vertex"))
+graph.bellford(source)
